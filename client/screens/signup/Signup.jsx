@@ -19,11 +19,12 @@ const Signup = ({ navigation }) => {
 			return;
 		}
 		try {
-			const { data } = await axios.post("http://localhost:5000/api/auth/signup", {
+			const { data } = await axios.post("https://neat-loops-smile.loca.lt/api/auth/signup", {
 				name,
 				email,
 				password,
 			});
+			console.log(data);
 			navigation.navigate("home");
 			setIsLoading(false);
 		} catch (err) {

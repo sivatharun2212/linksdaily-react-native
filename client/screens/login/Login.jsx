@@ -18,10 +18,11 @@ const Login = ({ navigation }) => {
 			return;
 		}
 		try {
-			const { data } = await axios.get("https://localhost:8000/api/signup", {
+			const { data } = await axios.get("https://neat-loops-smile.loca.lt/api/auth/login", {
 				email,
 				password,
 			});
+			navigation.navigate("home");
 			setIsLoading(false);
 		} catch (err) {
 			console.log(err);
