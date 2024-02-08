@@ -1,7 +1,7 @@
 import { authModel } from "../models/authModule.js";
 import { hash, compare } from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
-
+import { sendEmail } from "../services/emailService.js";
 export const signup = async (req, res) => {
 	const { name, email, password } = req.body;
 	try {
@@ -48,5 +48,25 @@ export const login = async (req, res) => {
 		}
 	} catch (err) {
 		res.status(500).json({ status: "error", message: err.message });
+	}
+};
+
+export const forgotPassword = async (req, res) => {
+	const { email } = req.body;
+	try {
+		const user = await authModel.findOne({ email });
+		if (!user) {
+			res.status(400).json({ status: "failure", message: "user not found!" });
+		}
+		const emailOtp = await sendEmail(email);
+
+		if (emailOtp) {
+			console.log(emailOtp);
+			user.resetCode = emailOtp.otp;
+			await user.save();
+			res.status(200).json({ status: "success", message: `OTP sent to ${email}` });
+		}
+	} catch (error) {
+		res.status(500).json({ status: "error", message: error.message });
 	}
 };

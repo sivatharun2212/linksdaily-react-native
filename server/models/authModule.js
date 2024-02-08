@@ -13,6 +13,9 @@ const schema = {
 		type: String,
 		required: [true, "please add password"],
 	},
+	resetCode: {
+		type: String,
+	},
 };
 
 const authSchema = mongoose.Schema(schema, { timestamps: true });

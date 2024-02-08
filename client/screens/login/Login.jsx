@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { Text, View, Image, TouchableOpacity } from "react-native";
-import LoginStyles from "./loginStyles"; // Correct import
+import LoginStyles from "./loginStyles";
 import UserInput from "../../components/auth/UserInput";
 import Button from "../../components/auth/Button";
 import axios from "axios";
@@ -18,7 +18,7 @@ const Login = ({ navigation }) => {
 			return;
 		}
 		try {
-			const { data } = await axios.get("https://neat-loops-smile.loca.lt/api/auth/login", {
+			const { data } = await axios.post("https://linksdaily-server.onrender.com/api/auth/login", {
 				email,
 				password,
 			});

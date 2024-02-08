@@ -19,7 +19,7 @@ const Signup = ({ navigation }) => {
 			return;
 		}
 		try {
-			const { data } = await axios.post("https://neat-loops-smile.loca.lt/api/auth/signup", {
+			const { data } = await axios.post("https://linksdaily-server.onrender.com/api/auth/signup", {
 				name,
 				email,
 				password,
