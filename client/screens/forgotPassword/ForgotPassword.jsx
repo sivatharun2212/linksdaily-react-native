@@ -6,9 +6,9 @@ import axios from "axios";
 const ForgotPassword = () => {
 	const [registeredEmail, setRegisteredEmail] = useState("");
 	const [isCodeSent, setIsCodeSent] = useState(false);
-	const handleSendCode = () => {
+	const handleSendCode = async () => {
 		if (registeredEmail !== "") {
-			const verifiedUser = axios.post("https://linksdaily-server.onrender.com/api/auth/verify-user", { registeredEmail });
+			const verifiedUser = await axios.post("https://linksdaily-server.onrender.com/api/auth/verify-user", { registeredEmail });
 			console.log("verifiedUser", verifiedUser);
 		}
 	};

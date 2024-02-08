@@ -4,9 +4,9 @@ import jsonwebtoken from "jsonwebtoken";
 import { sendEmail } from "../services/emailService.js";
 
 export const verifyUser = async (req, res) => {
-	const { registeredEmail } = req.body;
+	const { email } = req.body;
 	try {
-		const user = await authModel.findOne({ registeredEmail });
+		const user = await authModel.findOne({ email });
 		if (user) {
 			res.status(200).json({ status: "success", message: "user verified" });
 		} else {
