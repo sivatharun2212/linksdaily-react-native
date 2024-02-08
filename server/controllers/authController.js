@@ -2,6 +2,21 @@ import { authModel } from "../models/authModule.js";
 import { hash, compare } from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
 import { sendEmail } from "../services/emailService.js";
+
+export const verifyUser = async (req, res) => {
+	const { registeredEmail } = req.body;
+	try {
+		const user = await authModel.findOne({ registeredEmail });
+		if (user) {
+			res.status(200).json({ status: "success", message: "user verified" });
+		} else {
+			res.status(400).json({ status: "failure", message: "user is not registered" });
+		}
+	} catch (error) {
+		res.status(500).json({ status: "error", message: error.message });
+	}
+};
+
 export const signup = async (req, res) => {
 	const { name, email, password } = req.body;
 	try {

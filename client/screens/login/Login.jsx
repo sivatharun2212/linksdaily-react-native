@@ -50,7 +50,7 @@ const Login = ({ navigation }) => {
 					setValue={setPassword}
 					secureTextEntry={true}
 				/>
-				<TouchableOpacity>
+				<TouchableOpacity onPress={() => navigation.navigate("forgot-password")}>
 					<Text style={LoginStyles.forgot}>Forgot Password?</Text>
 				</TouchableOpacity>
 				<Button
