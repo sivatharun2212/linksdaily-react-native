@@ -12,7 +12,7 @@ const ForgotPassword = ({ navigation }) => {
 
 	//context
 
-	const [setRegisteredUserEmail] = useContext(AuthContext);
+	const [registeredUserEmail, setRegisteredUserEmail] = useContext(AuthContext);
 
 	const handleSendCode = async () => {
 		if (registeredEmail !== "") {

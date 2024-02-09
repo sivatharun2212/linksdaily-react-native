@@ -92,6 +92,8 @@ export const validateOtp = async (req, res) => {
 		const user = await authModel.findOne({ email });
 		if (user && user.resetCode === otp) {
 			res.status(200).json({ status: "success", message: "otp verified" });
+			user.resetCode = "";
+			await user.save();
 		} else {
 			res.status(400).json({ status: "failure", message: "otp not verified" });
 		}

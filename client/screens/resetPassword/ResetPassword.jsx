@@ -11,8 +11,9 @@ const ResetPassword = ({ navigation }) => {
 	const [registeredUserEmail] = useContext(AuthContext);
 
 	const handleResetPassword = async () => {
+		const email = await registeredUserEmail;
 		if ((newPassword !== "" || confirmPassword !== "") && newPassword === confirmPassword) {
-			const resetPassword = await axios.post("https://linksdaily-server.onrender.com/api/auth/reset-password", { email: registeredUserEmail, password: newPassword });
+			const resetPassword = await axios.post("https://linksdaily-server.onrender.com/api/auth/reset-password", { email, password: newPassword });
 			if ((resetPassword.data.status = "success")) {
 				navigation.navigate("login");
 			}

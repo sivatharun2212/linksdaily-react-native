@@ -15,7 +15,7 @@ export default function App() {
 		<NavigationContainer>
 			<AuthProvider>
 				<stack.Navigator
-					initialRouteName="reset-password"
+					initialRouteName="login"
 					screenOptions={{ headerShown: false }}>
 					<stack.Screen
 						name="signup"
