@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-export const forgotPasswordStyles = StyleSheet.create({
+export const resetPasswordStyles = StyleSheet.create({
 	cont: {
 		flex: 1,
 		justifyContent: "center",
@@ -8,7 +8,7 @@ export const forgotPasswordStyles = StyleSheet.create({
 	},
 	title: {
 		fontSize: 24,
-		marginBottom: 40,
+		marginBottom: 20,
 	},
 	input: {
 		width: 380,
@@ -17,13 +17,13 @@ export const forgotPasswordStyles = StyleSheet.create({
 		fontSize: 20,
 		paddingLeft: 10,
 		borderRadius: 10,
+		marginBottom: 30,
 	},
 	btnWrapper: {
 		backgroundColor: "#009999",
 		height: 50,
 		width: 380,
 		marginHorizontal: 20,
-		marginTop: 40,
 		borderRadius: 15,
 		justifyContent: "center",
 		alignItems: "center",
@@ -31,10 +31,5 @@ export const forgotPasswordStyles = StyleSheet.create({
 	sendBtn: {
 		fontSize: 18,
 		color: "#fff",
-	},
-	codeCont: {
-		justifyContent: "center",
-		alignItems: "center",
-		marginTop: 20,
 	},
 });

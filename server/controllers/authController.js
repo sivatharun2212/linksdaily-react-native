@@ -8,7 +8,7 @@ export const verifyUser = async (req, res) => {
 	try {
 		const user = await authModel.findOne({ email });
 		if (user) {
-			res.status(200).json({ status: "success", message: "user verified" });
+			res.status(200).json({ status: "success", message: "user verified", registeredUserEmail: user.email });
 		} else {
 			res.status(400).json({ status: "failure", message: "user is not registered" });
 		}
@@ -80,6 +80,35 @@ export const forgotPassword = async (req, res) => {
 			user.resetCode = emailOtp.otp;
 			await user.save();
 			res.status(200).json({ status: "success", message: `OTP sent to ${email}` });
+		}
+	} catch (error) {
+		res.status(500).json({ status: "error", message: error.message });
+	}
+};
+
+export const validateOtp = async (req, res) => {
+	const { otp, email } = req.body;
+	try {
+		const user = await authModel.findOne({ email });
+		if (user && user.resetCode === otp) {
+			res.status(200).json({ status: "success", message: "otp verified" });
+		} else {
+			res.status(400).json({ status: "failure", message: "otp not verified" });
+		}
+	} catch (error) {
+		res.status(500).json({ status: "error", message: error.message });
+	}
+};
+
+export const resetPassword = async (req, res) => {
+	const { email, password } = req.body;
+	try {
+		const user = await authModel.findOne({ email });
+		if (user) {
+			const hashedPassword = hash(password, 10);
+			user.password = hashedPassword;
+			await user.save();
+			res.status(200).json({ status: "success", message: "password changed" });
 		}
 	} catch (error) {
 		res.status(500).json({ status: "error", message: error.message });
