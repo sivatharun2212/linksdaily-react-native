@@ -107,7 +107,7 @@ export const resetPassword = async (req, res) => {
 	try {
 		const user = await authModel.findOne({ email });
 		if (user) {
-			const hashedPassword = hash(password, 10);
+			const hashedPassword = await hash(password, 10);
 			user.password = hashedPassword;
 			await user.save();
 			res.status(200).json({ status: "success", message: "password changed" });
