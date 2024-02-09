@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 
-let otp = "";
 const genrateOtp = () => {
+	let otp = "";
 	for (let i = 0; i < 6; i++) {
 		const number = Math.floor(Math.random() * 10);
 		otp += number;
