@@ -5,16 +5,19 @@ const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
 	const [registeredUserEmail, setRegisteredUserEmail] = useState("");
+	const [authUserData, setAuthUserData] = useState(null);
 
 	useEffect(() => {
 		const loadFromAsyncStorage = async () => {
-			let data = await AsyncStorage.getItem("@registeredUserEmail");
-			setRegisteredUserEmail(data);
+			let registeredEmail = await AsyncStorage.getItem("@registeredUserEmail");
+			setRegisteredUserEmail(registeredEmail);
+			let userDataToken = await AsyncStorage.getItem("@AuthenticationUserData");
+			setAuthUserData(JSON.parse(userDataToken));
 		};
 		loadFromAsyncStorage();
 	}, []);
 
-	return <AuthContext.Provider value={[registeredUserEmail, setRegisteredUserEmail]}>{children}</AuthContext.Provider>;
+	return <AuthContext.Provider value={[registeredUserEmail, setRegisteredUserEmail, authUserData, setAuthUserData]}>{children}</AuthContext.Provider>;
 };
 
 export { AuthContext, AuthProvider };

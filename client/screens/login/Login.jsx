@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
 import { Text, View, Image, TouchableOpacity } from "react-native";
 import LoginStyles from "./loginStyles";
 import UserInput from "../../components/auth/UserInput";
 import Button from "../../components/auth/Button";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthContext } from "../../context/authContext";
+
 const Login = ({ navigation }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
-
+	// context
+	const [authUserData, setAuthUserData] = useContext(AuthContext);
 	const handleSubmit = async () => {
 		setIsLoading(true);
 		if (!email || !password) {
@@ -22,6 +26,18 @@ const Login = ({ navigation }) => {
 				email,
 				password,
 			});
+			// save to async storage
+			await AsyncStorage.setItem(
+				"@AuthenticationUserData",
+				JSON.stringify({
+					token: data.token,
+					userData: data.userData,
+				})
+			);
+			console.log("as", AsyncStorage);
+			//update auth context
+			setAuthUserData({ token: data.token, userData: data.userData });
+
 			navigation.navigate("home");
 			setIsLoading(false);
 		} catch (err) {

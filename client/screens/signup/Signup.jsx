@@ -1,15 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
 import { Text, View, TouchableOpacity, Image } from "react-native";
 import SignupStyles from "./SignupStyles"; // Correct import
 import UserInput from "../../components/auth/UserInput";
 import Button from "../../components/auth/Button";
 import axios from "axios";
+import { AuthContext } from "../../context/authContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const Signup = ({ navigation }) => {
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
+
+	// context
+	const [authUserData, setAuthUserData] = useContext(AuthContext);
 
 	const handleSubmit = async () => {
 		setIsLoading(true);
@@ -25,6 +31,18 @@ const Signup = ({ navigation }) => {
 				password,
 			});
 			console.log(data);
+			// save to async storage
+			await AsyncStorage.setItem(
+				"@AuthenticationUserData",
+				JSON.stringify({
+					token: data.token,
+					userData: data.userData,
+				})
+			);
+
+			//update auth context
+			setAuthUserData({ token: data.token, userData: data.userData });
+
 			navigation.navigate("home");
 			setIsLoading(false);
 		} catch (err) {
