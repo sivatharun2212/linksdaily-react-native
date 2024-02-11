@@ -33,6 +33,8 @@ const Me = ({ navigation }) => {
 		const base64Image = `data:image/jpg;base64,${result.assets[0].base64}`;
 		setUploadedImage(base64Image);
 		const token = authUserData?.token !== "" && authUserData.token;
+		console.log("Token", token);
+		console.log("image", base64Image);
 		const storeImage = await axios.post(
 			"https://linksdaily-server.onrender.com/api/user/upload-image",
 			{

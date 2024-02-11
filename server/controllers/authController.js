@@ -7,9 +7,9 @@ import { nanoid } from "nanoid";
 
 // cloudinary configuration
 cloudinary.config({
-	cloud_name: process.env.CLOUDINARY_NAME,
-	api_key: process.env.CLOUDINARY_API_KEY,
-	api_secret: process.env.CLOUDINARY_SECRET_KEY,
+	cloud_name: "dpnzucco8",
+	api_key: "113891742981529",
+	api_secret: "ef3p-jUp9e20LJHljG6TdWnx-0o",
 });
 
 export const verifyUser = async (req, res) => {
@@ -132,10 +132,11 @@ export const uploadImage = async (req, res) => {
 	try {
 		const uploadResult = await cloudinary.uploader.upload(req.body.image, {
 			public_id: nanoid(),
-			resource_type: "jpg",
+			// resource_type: "jpg",
 		});
+		res.status(200).json({ status: "success", message: "image uploades", uploadResult });
 		console.log("uploadResult", uploadResult);
 	} catch (error) {
-		res.status(500).json({ status: "error", message: error.message });
+		res.status(500).json({ status: "error", message: error });
 	}
 };
