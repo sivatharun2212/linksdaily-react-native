@@ -1,26 +1,33 @@
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import { useState, useContext } from "react";
-import { forgotPasswordStyles } from "./forgotPasswordStyles";
-import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+
+import { forgotPasswordStyles } from "./forgotPasswordStyles";
 import { AuthContext } from "../../context/authContext";
+
 const ForgotPassword = ({ navigation }) => {
+	//state variables
 	const [registeredEmail, setRegisteredEmail] = useState("");
 	const [isUserVerified, setIsUserVerified] = useState(false);
 	const [isOtpSent, setIsOtpSent] = useState(false);
 	const [otp, setOtp] = useState(false);
 
-	//context
-
-	const [registeredUserEmail, setRegisteredUserEmail] = useContext(AuthContext);
-
+	//auth context
+	const [authUserData, setAuthUserData] = useContext(AuthContext);
+	//onpress event : send reset code button click
 	const handleSendCode = async () => {
 		if (registeredEmail !== "") {
 			setIsOtpSent(true);
-			const verifiedUser = await axios.post("https://linksdaily-server.onrender.com/api/auth/verify-user", { email: registeredEmail });
-			if (verifiedUser.data.status === "success") {
-				setRegisteredUserEmail(verifiedUser.data.registeredUserEmail);
-				await AsyncStorage.setItem("@registeredUserEmail", verifiedUser.data.registeredUserEmail);
+			//send post request to verify user
+			const { data } = await axios.post("https://linksdaily-server.onrender.com/api/auth/verify-user", { email: registeredEmail });
+			if (data.status === "success") {
+				//update registered user email in auth context
+				setAuthUserData((prevState) => ({ ...prevState, registeredUserEmail: registeredEmail }));
+				//add registered user email in async storage
+				await AsyncStorage.setItem("@RUE", registeredEmail);
+
+				//send post request to send email to user for reseting the password
 				const sendOtp = await axios.post("https://linksdaily-server.onrender.com/api/auth/forgot-password", { email: registeredEmail });
 				if ((sendOtp.data.status = "success")) {
 					setIsUserVerified(true);
@@ -32,8 +39,11 @@ const ForgotPassword = ({ navigation }) => {
 		}
 	};
 
+	//onpress event : reset password button to create and confirm a new password
 	const handelResetPass = async () => {
+		//check the otp length
 		if (otp && otp.length === 6) {
+			//send post request to validate otp
 			const resetPassword = await axios.post("https://linksdaily-server.onrender.com/api/auth/validate-otp", { otp, email: registeredEmail });
 			if (resetPassword.data.status === "success") {
 				navigation.navigate("reset-password");

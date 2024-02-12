@@ -1,12 +1,31 @@
 import mongoose from "mongoose";
 
+//authentication schema
 const schema = {
+	name: {
+		type: String,
+		required: [true, "please add the Name"],
+	},
+	email: {
+		type: String,
+		required: [true, "please add email"],
+	},
+	password: {
+		type: String,
+		required: [true, "please add password"],
+	},
+	resetCode: {
+		type: String,
+	},
+	role: {
+		type: String,
+	},
 	image: {
-		uri: {
+		public_id: {
 			type: String,
 			required: true,
 		},
-		public_id: {
+		url: {
 			type: String,
 			required: true,
 		},

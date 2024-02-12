@@ -1,39 +1,46 @@
 import React, { useContext, useState } from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
+import axios from "axios";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import * as imagePicker from "expo-image-picker";
+
 import NavToolBar from "../../components/nav/Nav";
 import meStyles from "./meStyles";
 import { AuthContext } from "../../context/authContext";
-// import roseImg from "../../assets/rose.jpg";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import * as imagePicker from "expo-image-picker";
-import axios from "axios";
 
 const Me = ({ navigation }) => {
+	//state variables
 	const [uploadedImage, setUploadedImage] = useState("");
 	const [imgUploadData, setImgUploadData] = useState("");
-	//context
+
+	//auth context
 	const [authUserData, setAuthUserData] = useContext(AuthContext);
 	const { name, email } = authUserData?.userData;
 
+	//onpress event : update profile icon click
 	const handleImageUpload = async () => {
+		//request permission to access media library
 		const permissionResult = await imagePicker.requestMediaLibraryPermissionsAsync();
 		if (permissionResult.granted === false) {
 			alert("Media access is required");
 			return;
 		}
+		//launch image library
 		const result = await imagePicker.launchImageLibraryAsync({
 			allowsEditing: true,
 			aspect: [4, 4],
 			base64: true,
 		});
-
+		//if user cancel the launch event
 		if (result.canceled === true) {
 			return;
 		}
 
+		//get image from image picker
 		const base64Image = `data:image/jpg;base64,${result.assets[0].base64}`;
 		setUploadedImage(base64Image);
 		const token = authUserData?.token !== "" && authUserData.token;
+		//send api request to save updated profile image
 		const { data } = await axios.post(
 			"https://linksdaily-server.onrender.com/api/user/upload-image",
 			{
@@ -48,6 +55,7 @@ const Me = ({ navigation }) => {
 		);
 		setImgUploadData(data.message);
 	};
+
 	return (
 		<View style={meStyles.cont}>
 			<ScrollView

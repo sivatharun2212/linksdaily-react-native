@@ -1,4 +1,5 @@
 import { View, Text, TextInput } from "react-native";
+
 import inputStyles from "./inputStyles";
 
 const UserInput = ({ label, value, setValue, autoCapitalize, secureTextEntry }) => {

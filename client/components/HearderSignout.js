@@ -2,17 +2,30 @@ import React, { useContext } from "react";
 import { TouchableOpacity, SafeAreaView } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { AuthContext } from "../context/authContext";
 
 const HeaderSignout = () => {
-	const [registeredUserEmail, setRegisteredUserEmail] = useContext(AuthContext);
+	//state variables
 	const [authUserData, setAuthUserData] = useContext(AuthContext);
+
+	//onpress event : sign out button click
 	const signout = async () => {
-		setRegisteredUserEmail("");
-		setAuthUserData(null);
-		await AsyncStorage.removeItem("@registeredUserEmail");
-		await AsyncStorage.removeItem("@authenticatedUserData");
+		//remove user auth data in auth context
+		setAuthUserData((prevState) => ({ ...prevState, registeredUserEmail: "", token: "", userData: null }));
+		//remove user auth data in async storage
+		await AsyncStorage.clear();
+
+		// // Verify AsyncStorage has been cleared
+		// const audItem = await AsyncStorage.getItem("@AUD");
+		// const rueItem = await AsyncStorage.getItem("@RUE");
+		// if (!audItem && !rueItem) {
+		// 	console.log("AsyncStorage cleared.");
+		// } else {
+		// 	console.log("AsyncStorage not cleared:", audItem, rueItem);
+		// }
 	};
+
 	return (
 		<SafeAreaView>
 			<TouchableOpacity onPress={signout}>

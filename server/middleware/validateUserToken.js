@@ -1,5 +1,6 @@
 import jsonwebtoken from "jsonwebtoken";
 
+//validate token
 const validateUserToken = async (req, res, next) => {
 	let token = "";
 	let authHeader = req.header("Authorization");

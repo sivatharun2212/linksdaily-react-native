@@ -1,24 +1,32 @@
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import { useState, useContext } from "react";
-import { resetPasswordStyles } from "./resetPasswordStyles";
 import axios from "axios";
+
+import { resetPasswordStyles } from "./resetPasswordStyles";
 import { AuthContext } from "../../context/authContext";
 
 const ResetPassword = ({ navigation }) => {
+	//state variables
 	const [newPassword, setNewPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
-	// context
-	const [registeredUserEmail] = useContext(AuthContext);
-
+	const [resData, setResData] = useState("");
+	//auth context
+	const [authUserData, setAuthUserData] = useContext(AuthContext);
+	//onpress event : done button click
 	const handleResetPassword = async () => {
-		const email = await registeredUserEmail;
+		const email = await authUserData.registeredUserEmail;
 		if ((newPassword !== "" || confirmPassword !== "") && newPassword === confirmPassword) {
-			const resetPassword = await axios.post("https://linksdaily-server.onrender.com/api/auth/reset-password", { email, password: newPassword });
-			if ((resetPassword.data.status = "success")) {
+			//send post request to reset password
+			const { data } = await axios.post("https://linksdaily-server.onrender.com/api/auth/reset-password", { email, password: newPassword });
+			if (data.status === "success") {
 				navigation.navigate("login");
+			}
+			if (data.status === "error") {
+				setResData(data.message);
 			}
 		}
 	};
+
 	return (
 		<>
 			<View style={resetPasswordStyles.cont}>

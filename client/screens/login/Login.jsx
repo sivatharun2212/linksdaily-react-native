@@ -1,19 +1,23 @@
 import React, { useState, useContext } from "react";
-
 import { Text, View, Image, TouchableOpacity } from "react-native";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import LoginStyles from "./loginStyles";
 import UserInput from "../../components/auth/UserInput";
 import Button from "../../components/auth/Button";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../../context/authContext";
 
 const Login = ({ navigation }) => {
+	//state variables
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
-	// context
+
+	//auth context
 	const [authUserData, setAuthUserData] = useContext(AuthContext);
+
+	//onpress event : login button click
 	const handleSubmit = async () => {
 		setIsLoading(true);
 		if (!email || !password) {
@@ -22,21 +26,24 @@ const Login = ({ navigation }) => {
 			return;
 		}
 		try {
+			//send post request to login user
 			const { data } = await axios.post("https://linksdaily-server.onrender.com/api/auth/login", {
 				email,
 				password,
 			});
-			// save to async storage
+
+			// save auth user data in async storage
 			await AsyncStorage.setItem(
-				"@AuthenticationUserData",
+				"@AUD",
 				JSON.stringify({
 					token: data.token,
 					userData: data.userData,
 				})
 			);
-			console.log("as", AsyncStorage);
-			//update auth context
-			setAuthUserData({ token: data.token, userData: data.userData });
+			// console.log("as", AsyncStorage);
+
+			//update auth user data in auth context
+			setAuthUserData((prevState) => ({ ...prevState, token: data.token, userData: data.userData }));
 
 			navigation.navigate("home");
 			setIsLoading(false);
@@ -45,6 +52,7 @@ const Login = ({ navigation }) => {
 			setIsLoading(false);
 		}
 	};
+
 	return (
 		<>
 			<View style={LoginStyles.container}>

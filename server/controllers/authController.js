@@ -1,14 +1,16 @@
-import { authModel } from "../models/authModel.js";
+import { userModel } from "../models/userModel.js";
 import { hash, compare } from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
 import { sendEmail } from "../services/emailService.js";
 
+//verify-user route
+//post
 export const verifyUser = async (req, res) => {
 	const { email } = req.body;
 	try {
-		const user = await authModel.findOne({ email });
+		const user = await userModel.findOne({ email });
 		if (user) {
-			res.status(200).json({ status: "success", message: "user verified", registeredUserEmail: user.email });
+			res.status(200).json({ status: "success", message: "user verified" });
 		} else {
 			res.status(400).json({ status: "failure", message: "user is not registered" });
 		}
@@ -17,15 +19,17 @@ export const verifyUser = async (req, res) => {
 	}
 };
 
+//signup route
+//post
 export const signup = async (req, res) => {
 	const { name, email, password } = req.body;
 	try {
-		const userExists = await authModel.findOne({ email });
+		const userExists = await userModel.findOne({ email });
 		if (userExists) {
 			res.status(409).json({ status: "failed", message: "user already exists!" });
 		} else {
 			const hashedPassword = await hash(password, 10);
-			const user = await authModel.create({
+			const user = await userModel.create({
 				name,
 				email,
 				password: hashedPassword,
@@ -45,10 +49,12 @@ export const signup = async (req, res) => {
 	}
 };
 
+//login route
+//post
 export const login = async (req, res) => {
 	const { email, password } = req.body;
 	try {
-		const userExists = await authModel.findOne({ email });
+		const userExists = await userModel.findOne({ email });
 		if (!userExists) {
 			res.status(400).json({ status: "failure", message: "User not found!" });
 		} else {
@@ -66,10 +72,12 @@ export const login = async (req, res) => {
 	}
 };
 
+//forgot-password route
+//post
 export const forgotPassword = async (req, res) => {
 	const { email } = req.body;
 	try {
-		const user = await authModel.findOne({ email });
+		const user = await userModel.findOne({ email });
 		if (!user) {
 			res.status(400).json({ status: "failure", message: "user not found!" });
 		}
@@ -86,10 +94,12 @@ export const forgotPassword = async (req, res) => {
 	}
 };
 
+//validate-otp route
+//post
 export const validateOtp = async (req, res) => {
 	const { otp, email } = req.body;
 	try {
-		const user = await authModel.findOne({ email });
+		const user = await userModel.findOne({ email });
 		if (user && user.resetCode === otp) {
 			res.status(200).json({ status: "success", message: "otp verified" });
 			user.resetCode = "";
@@ -102,10 +112,12 @@ export const validateOtp = async (req, res) => {
 	}
 };
 
+//reset-password route
+//post
 export const resetPassword = async (req, res) => {
 	const { email, password } = req.body;
 	try {
-		const user = await authModel.findOne({ email });
+		const user = await userModel.findOne({ email });
 		if (user) {
 			const hashedPassword = await hash(password, 10);
 			user.password = hashedPassword;

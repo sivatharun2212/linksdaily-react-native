@@ -9,6 +9,8 @@ cloudinary.config({
 	api_secret: process.env.CLOUDINARY_SECRET_KEY,
 });
 
+//upload-image route
+//post
 export const uploadImage = async (req, res) => {
 	// const { _id, email } = req.user;
 
