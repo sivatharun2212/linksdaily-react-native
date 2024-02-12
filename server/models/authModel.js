@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+//authentication schema
 const schema = {
 	name: {
 		type: String,
@@ -20,4 +21,4 @@ const schema = {
 
 const authSchema = mongoose.Schema(schema, { timestamps: true });
 
-export const authModel = mongoose.model("Users", authSchema);
+export const authModel = mongoose.model("Auth", authSchema);

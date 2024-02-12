@@ -1,16 +1,7 @@
-import { authModel } from "../models/authModule.js";
+import { authModel } from "../models/authModel.js";
 import { hash, compare } from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
 import { sendEmail } from "../services/emailService.js";
-import { v2 as cloudinary } from "cloudinary";
-import { nanoid } from "nanoid";
-
-// cloudinary configuration
-cloudinary.config({
-	cloud_name: "dpnzucco8",
-	api_key: "113891742981529",
-	api_secret: "ef3p-jUp9e20LJHljG6TdWnx-0o",
-});
 
 export const verifyUser = async (req, res) => {
 	const { email } = req.body;
@@ -123,20 +114,5 @@ export const resetPassword = async (req, res) => {
 		}
 	} catch (error) {
 		res.status(500).json({ status: "error", message: error.message });
-	}
-};
-
-export const uploadImage = async (req, res) => {
-	// const { _id, email } = req.user;
-
-	try {
-		const uploadResult = await cloudinary.uploader.upload(req.body.image, {
-			public_id: nanoid(),
-			// resource_type: "jpg",
-		});
-		res.status(200).json({ status: "success", message: "image uploades", uploadResult });
-		console.log("uploadResult", uploadResult);
-	} catch (error) {
-		res.status(500).json({ status: "error", message: error });
 	}
 };

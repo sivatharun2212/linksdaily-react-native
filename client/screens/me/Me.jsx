@@ -10,6 +10,7 @@ import axios from "axios";
 
 const Me = ({ navigation }) => {
 	const [uploadedImage, setUploadedImage] = useState("");
+	const [imgUploadData, setImgUploadData] = useState("");
 	//context
 	const [authUserData, setAuthUserData] = useContext(AuthContext);
 	const { name, email } = authUserData?.userData;
@@ -33,9 +34,7 @@ const Me = ({ navigation }) => {
 		const base64Image = `data:image/jpg;base64,${result.assets[0].base64}`;
 		setUploadedImage(base64Image);
 		const token = authUserData?.token !== "" && authUserData.token;
-		console.log("Token", token);
-		console.log("image", base64Image);
-		const storeImage = await axios.post(
+		const { data } = await axios.post(
 			"https://linksdaily-server.onrender.com/api/user/upload-image",
 			{
 				image: base64Image,
@@ -47,6 +46,7 @@ const Me = ({ navigation }) => {
 				},
 			}
 		);
+		setImgUploadData(data.message);
 	};
 	return (
 		<View style={meStyles.cont}>
@@ -77,6 +77,7 @@ const Me = ({ navigation }) => {
 				</View>
 				<Text>{name}</Text>
 				<Text>{email}</Text>
+				<Text>{imgUploadData}</Text>
 			</ScrollView>
 			<NavToolBar navigation={navigation} />
 		</View>

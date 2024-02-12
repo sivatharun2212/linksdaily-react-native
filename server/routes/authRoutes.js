@@ -1,7 +1,10 @@
 import express from "express";
-const authRouter = express.Router();
 import { signup, login, forgotPassword, verifyUser, validateOtp, resetPassword } from "../controllers/authController.js";
 
+//router initialization
+const authRouter = express.Router();
+
+//auth routes
 authRouter.post("/signup", signup);
 authRouter.post("/login", login);
 authRouter.post("/forgot-password", forgotPassword);
