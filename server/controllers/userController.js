@@ -12,17 +12,24 @@ cloudinary.config({
 //upload-image route
 //post
 export const uploadImage = async (req, res) => {
-	// const { _id, email } = req.user;
+	const { email } = req.user;
 
 	try {
 		const uploadResult = await cloudinary.uploader.upload(req.body.image, {
 			public_id: nanoid(),
 			// resource_type: "jpg",
 		});
-		res.status(200).json({ status: "success", message: "image uploaded", uploadResult });
+		const user = userModel.findOne({ email });
+		user.image.public_id = uploadResult.public_id;
+		user.image.url = uploadResult.secure_url;
+		await user.save();
+		if (user.image.public_id !== "" && user.image.secure_url !== "") {
+			const { password, ...rest } = user._doc;
+			res.status(200).json({ status: "success", message: "image uploaded", userData: rest });
+		}
 		console.log("uploadResult", uploadResult);
 	} catch (error) {
-		res.status(500).json({ status: "error", message: error });
+		res.status(500).json({ status: "error", message: error.message });
 	}
 };
 
