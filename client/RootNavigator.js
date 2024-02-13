@@ -6,10 +6,10 @@ import ForgotPassword from "./screens/forgotPassword/ForgotPassword";
 import ResetPassword from "./screens/resetPassword/ResetPassword";
 import { AuthContext } from "./context/authContext";
 import { useContext } from "react";
-import HeaderSignout from "./components/HearderSignout";
 import Me from "./screens/me/Me";
 import Post from "./screens/post/Posts";
 import Links from "./screens/links/Links";
+import UpdateDetails from "./screens/updateDetails/UpdateDetails";
 
 const stack = createNativeStackNavigator();
 
@@ -27,7 +27,6 @@ const RootNavigator = () => {
 						component={Home}
 						options={{
 							title: "Linksdaily",
-							headerRight: () => <HeaderSignout />,
 						}}
 					/>
 					<stack.Screen
@@ -44,6 +43,13 @@ const RootNavigator = () => {
 					<stack.Screen
 						name="post"
 						component={Post}
+					/>
+					<stack.Screen
+						name="update-details"
+						component={UpdateDetails}
+						options={{
+							title: "Update Details",
+						}}
 					/>
 				</>
 			) : (

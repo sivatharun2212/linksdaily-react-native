@@ -8,6 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import NavToolBar from "../../components/nav/Nav";
 import meStyles from "./meStyles";
 import { AuthContext } from "../../context/authContext";
+import AccountOptions from "../../components/accountOptions/AccountOptions";
 
 const Me = ({ navigation }) => {
 	//state variables
@@ -107,6 +108,7 @@ const Me = ({ navigation }) => {
 				<View style={meStyles.userInfo}>
 					<Text style={meStyles.userName}>{name}</Text>
 					<Text style={meStyles.userEmail}>{email}</Text>
+					<AccountOptions />
 				</View>
 			</ScrollView>
 			<NavToolBar navigation={navigation} />

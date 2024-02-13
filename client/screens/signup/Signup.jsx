@@ -24,6 +24,12 @@ const Signup = ({ navigation }) => {
 	//onpress event : send otp click
 	const sendOtp = async () => {
 		console.log("started");
+		setIsLoading(true);
+		if (!email) {
+			alert("all fields are required!");
+			setIsLoading(false);
+			return;
+		}
 		try {
 			console.log("tried");
 			const { data } = await axios.post("https://linksdaily-server.onrender.com/api/auth/send-otp", { email });
@@ -33,19 +39,25 @@ const Signup = ({ navigation }) => {
 				setAskOtp(true);
 				setGeneratedOtp(data.otp);
 			}
+			setIsLoading(false);
 		} catch (error) {
 			alert(error.message);
+			setIsLoading(false);
 		}
 	};
 
 	//onpress event : verify email click
 	const handleVerifyEmail = async () => {
+		setIsLoading(true);
 		try {
 			if (otp !== "" && generatedOtp !== "" && otp === generatedOtp) {
 				setIsEmailVerified(true);
+				setAskOtp(false);
 			}
+			setIsLoading(false);
 		} catch (error) {
 			alert(error.message);
+			setIsLoading(false);
 		}
 	};
 
@@ -122,11 +134,11 @@ const Signup = ({ navigation }) => {
 					</>
 				)}
 
-				{!askOtp && (
+				{!askOtp && !isEmailVerified && (
 					<TouchableOpacity
 						onPress={sendOtp}
 						style={SignupStyles.touchOp}>
-						<Text style={SignupStyles.button}>Send Opt</Text>
+						{isLoading ? <Text style={SignupStyles.button}>Sending</Text> : <Text style={SignupStyles.button}>Send Opt</Text>}
 					</TouchableOpacity>
 				)}
 
@@ -141,7 +153,7 @@ const Signup = ({ navigation }) => {
 						<TouchableOpacity
 							onPress={handleVerifyEmail}
 							style={SignupStyles.touchOp}>
-							<Text style={SignupStyles.button}>Verify email</Text>
+							{isLoading ? <Text style={SignupStyles.button}>Verifing...</Text> : <Text style={SignupStyles.button}>Verify email</Text>}
 						</TouchableOpacity>
 					</>
 				)}

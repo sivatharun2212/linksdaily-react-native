@@ -39,12 +39,12 @@ const meStyles = StyleSheet.create({
 	},
 	userInfo: {
 		height: "100%",
-		backgroundColor: "#095353",
+		backgroundColor: "#2d4949",
 		borderTopRightRadius: 60,
 		borderTopLeftRadius: 60,
 		flex: 1,
 		marginTop: 30,
-		paddingVertical: 40,
+		paddingTop: 40,
 		alignItems: "center",
 	},
 	userName: {
