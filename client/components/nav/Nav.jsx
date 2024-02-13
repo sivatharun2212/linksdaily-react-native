@@ -25,7 +25,6 @@ const ToolTip = ({ label, name, size, solid, onPress, screenName }) => {
 
 const NavToolBar = ({ navigation }) => {
 	const route = useRoute();
-	console.log("route", route);
 	return (
 		<>
 			<Divider />

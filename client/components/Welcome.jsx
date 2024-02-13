@@ -83,3 +83,20 @@ export default Welcome;
 // 	  "updatedAt": "2024-02-12T13:24:55.962Z"
 // 	}
 //   }
+
+// {
+// 	"message": "image uploaded",
+// 	"status": "success",
+// 	"userData": {
+// 	  "__v": 0,
+// 	  "_id": "65ca3d9366ae187bf77808d2",
+// 	  "createdAt": "2024-02-12T15:47:31.862Z",
+// 	  "email": "sivatharun2212@gmail.com",
+// 	  "image": {
+// 		"public_id": "cSwlBHo_xr7WeopLphNtm",
+// 		"url": "https://res.cloudinary.com/dpnzucco8/image/upload/v1707753993/cSwlBHo_xr7WeopLphNtm.jpg"
+// 	  },
+// 	  "name": "rowdy siva",
+// 	  "updatedAt": "2024-02-12T16:06:34.107Z"
+// 	}
+//   }

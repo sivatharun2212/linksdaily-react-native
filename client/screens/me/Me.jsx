@@ -1,8 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import axios from "axios";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import * as imagePicker from "expo-image-picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import NavToolBar from "../../components/nav/Nav";
 import meStyles from "./meStyles";
@@ -16,6 +17,12 @@ const Me = ({ navigation }) => {
 	//auth context
 	const [authUserData, setAuthUserData] = useContext(AuthContext);
 	const { name, email } = authUserData?.userData;
+
+	useEffect(() => {
+		if (authUserData?.userData?.image?.url) {
+			setUploadedImage("");
+		}
+	}, [authUserData]);
 
 	//onpress event : update profile icon click
 	const handleImageUpload = async () => {
@@ -54,7 +61,14 @@ const Me = ({ navigation }) => {
 			}
 		);
 		if (data) {
-			console.log("datafrom me", data);
+			//update image in auth context
+			setAuthUserData((prevState) => ({ ...prevState, userData: data.userData }));
+
+			//update authUserData in async storage
+			let as = await AsyncStorage.getItem("@AUD");
+			as = JSON.parse(as);
+			as.userData = data.userData;
+			await AsyncStorage.setItem("@AUD", JSON.stringify(as));
 		}
 	};
 
@@ -64,15 +78,20 @@ const Me = ({ navigation }) => {
 				bounces={true}
 				style={meStyles.meSection}>
 				<View style={meStyles.imageCont}>
-					{uploadedImage !== "" ? (
+					{uploadedImage ? (
 						<Image
 							style={{ width: 160, height: 160, alignSelf: "center", resizeMode: "cover" }}
 							source={{ uri: uploadedImage }}
 						/>
+					) : authUserData?.userData?.image && authUserData.userData.image.url ? (
+						<Image
+							style={{ width: 160, height: 160, alignSelf: "center", resizeMode: "cover" }}
+							source={{ uri: authUserData.userData.image.url }}
+						/>
 					) : (
 						<Image
 							style={{ width: 160, height: 160, alignSelf: "center", resizeMode: "cover" }}
-							source={require("../../assets/rose.jpg")}
+							source={require("../../assets/default-user.jpg")}
 						/>
 					)}
 				</View>
@@ -85,8 +104,10 @@ const Me = ({ navigation }) => {
 						/>
 					</TouchableOpacity>
 				</View>
-				<Text>{name}</Text>
-				<Text>{email}</Text>
+				<View style={meStyles.userInfo}>
+					<Text style={meStyles.userName}>{name}</Text>
+					<Text style={meStyles.userEmail}>{email}</Text>
+				</View>
 			</ScrollView>
 			<NavToolBar navigation={navigation} />
 		</View>

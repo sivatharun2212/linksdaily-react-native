@@ -1,5 +1,5 @@
 import express from "express";
-import { signup, login, forgotPassword, verifyUser, validateOtp, resetPassword } from "../controllers/authController.js";
+import { signup, login, forgotPassword, verifyUser, validateOtp, resetPassword, sendOtp } from "../controllers/authController.js";
 
 //router initialization
 const authRouter = express.Router();
@@ -11,5 +11,6 @@ authRouter.post("/forgot-password", forgotPassword);
 authRouter.post("/verify-user", verifyUser);
 authRouter.post("/validate-otp", validateOtp);
 authRouter.post("/reset-password", resetPassword);
+authRouter.post("/send-otp", resetPassword);
 
 export default authRouter;

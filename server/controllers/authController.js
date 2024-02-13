@@ -19,6 +19,22 @@ export const verifyUser = async (req, res) => {
 	}
 };
 
+//send-otp route
+//post
+export const sendOtp = async (req, res) => {
+	const { email } = req.body;
+	try {
+		const emailOtp = await sendEmail(email);
+
+		if (emailOtp) {
+			// console.log(emailOtp);
+			res.status(200).json({ status: "success", message: `OTP sent to ${email}`, otp: emailOtp.otp });
+		}
+	} catch (error) {
+		res.status(500).json({ status: "error", message: error.message });
+	}
+};
+
 //signup route
 //post
 export const signup = async (req, res) => {
@@ -80,6 +96,7 @@ export const forgotPassword = async (req, res) => {
 		const user = await userModel.findOne({ email });
 		if (!user) {
 			res.status(400).json({ status: "failure", message: "user not found!" });
+			return;
 		}
 		const emailOtp = await sendEmail(email);
 

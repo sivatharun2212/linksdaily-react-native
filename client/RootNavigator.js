@@ -33,6 +33,9 @@ const RootNavigator = () => {
 					<stack.Screen
 						name="me"
 						component={Me}
+						options={{
+							title: "Account",
+						}}
 					/>
 					<stack.Screen
 						name="links"

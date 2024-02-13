@@ -37,6 +37,26 @@ const meStyles = StyleSheet.create({
 		borderWidth: 2,
 		borderColor: "#997a00",
 	},
+	userInfo: {
+		height: "100%",
+		backgroundColor: "#095353",
+		borderTopRightRadius: 60,
+		borderTopLeftRadius: 60,
+		flex: 1,
+		marginTop: 30,
+		paddingVertical: 40,
+		alignItems: "center",
+	},
+	userName: {
+		color: "#fff",
+		fontSize: 25,
+		fontWeight: "700",
+		paddingBottom: 6,
+	},
+	userEmail: {
+		color: "#cac8c8",
+		fontSize: 18,
+	},
 });
 
 export default meStyles;
