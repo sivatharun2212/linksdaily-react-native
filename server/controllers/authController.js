@@ -22,10 +22,13 @@ export const verifyUser = async (req, res) => {
 //send-otp route
 //post
 export const sendOtp = async (req, res) => {
+	console.log("started");
 	const { email } = req.body;
+	console.log("got email", email);
 	try {
+		console.log("tried");
 		const emailOtp = await sendEmail(email);
-
+		console.log("sent", emailOtp);
 		if (emailOtp) {
 			// console.log(emailOtp);
 			res.status(200).json({ status: "success", message: `OTP sent to ${email}`, otp: emailOtp.otp });

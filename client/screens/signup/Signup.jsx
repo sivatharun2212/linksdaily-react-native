@@ -23,9 +23,13 @@ const Signup = ({ navigation }) => {
 
 	//onpress event : send otp click
 	const sendOtp = async () => {
+		console.log("started");
 		try {
+			console.log("tried");
 			const { data } = await axios.post("https://linksdaily-server.onrender.com/api/auth/send-otp", { email });
+			console.log("req sent");
 			if (data.status === "success") {
+				console.log("got res");
 				setAskOtp(true);
 				setGeneratedOtp(data.otp);
 			}
