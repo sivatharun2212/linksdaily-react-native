@@ -7,7 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import updateDetailsStyles from "./updateDetailsStyles";
 import { AuthContext } from "../../context/authContext";
 
-const UpdateDetails = () => {
+const UpdateDetails = ({ navigation }) => {
 	//state variables
 	const [isUpdateNameOpened, setIsUpdateNameOpened] = useState(false);
 	const [isUpdatePasswordOpened, setIsUpdatePasswordOpened] = useState(false);
@@ -42,14 +42,14 @@ const UpdateDetails = () => {
 				if (data.status === "success") {
 					//update userData in context
 					setAuthUserData((prevState) => ({ ...prevState, userData: data.userData }));
-
 					//save userData in async storage
-					const as = await AsyncStorage.getItem("@AUD");
+					let as = await AsyncStorage.getItem("@AUD");
 					as = JSON.parse(as);
 					as.userData = data.userData;
 					await AsyncStorage.setItem("@AUD", JSON.stringify(as));
 				}
 				setIsLoading(false);
+				navigation.navigate("me");
 			} catch (error) {
 				alert(error.message);
 				setIsLoading(false);
@@ -58,7 +58,18 @@ const UpdateDetails = () => {
 	};
 
 	//onpress event : update password
-	const handleUpdatePassword = () => {};
+	const handleUpdatePassword = async () => {
+		if (oldPassword !== "" || newPassword !== "" || (confirmNewPassword !== "" && newPassword === confirmNewPassword)) {
+			try {
+			} catch (error) {}
+		} else {
+			if (newPassword !== confirmNewPassword) {
+				alert("passwords not matched");
+			} else {
+				alert("all fields required");
+			}
+		}
+	};
 
 	//onpress event : update role
 	const handleUpdateRole = () => {};
@@ -117,6 +128,7 @@ const UpdateDetails = () => {
 								style={updateDetailsStyles.Button}>
 								<Text style={updateDetailsStyles.btnText}>Update</Text>
 							</TouchableOpacity>
+							<Text style={updateDetailsStyles.forgot}>seems like you forgot your password</Text>
 						</View>
 					)}
 					<Divider width={1} />

@@ -13,17 +13,24 @@ import AccountOptions from "../../components/accountOptions/AccountOptions";
 const Me = ({ navigation }) => {
 	//state variables
 	const [uploadedImage, setUploadedImage] = useState("");
+	// const [name, setName] = useState("");
+	// const [email, setEmail] = useState("");
 	// const [imgUploadData, setImgUploadData] = useState("");
 
 	//auth context
 	const [authUserData, setAuthUserData] = useContext(AuthContext);
-	const { name, email } = authUserData?.userData;
-
 	useEffect(() => {
 		if (authUserData?.userData?.image?.url) {
 			setUploadedImage("");
 		}
 	}, [authUserData]);
+	// useEffect(() => {
+	// 	console.log("context from me", authUserData);
+	// 	if (authUserData?.userData?.name && authUserData?.userData?.email) {
+	// 		setName(authUserData.userData.name);
+	// 		setEmail(authUserData.userData.email);
+	// 	}
+	// }, [authUserData]);
 
 	//onpress event : update profile icon click
 	const handleImageUpload = async () => {
@@ -70,6 +77,7 @@ const Me = ({ navigation }) => {
 			as = JSON.parse(as);
 			as.userData = data.userData;
 			await AsyncStorage.setItem("@AUD", JSON.stringify(as));
+			console.log("checking image in context", authUserData);
 		}
 	};
 
@@ -106,8 +114,8 @@ const Me = ({ navigation }) => {
 					</TouchableOpacity>
 				</View>
 				<View style={meStyles.userInfo}>
-					<Text style={meStyles.userName}>{name}</Text>
-					<Text style={meStyles.userEmail}>{email}</Text>
+					<Text style={meStyles.userName}>{authUserData.userData.name}</Text>
+					<Text style={meStyles.userEmail}>{authUserData.userData.email}</Text>
 					<AccountOptions />
 				</View>
 			</ScrollView>

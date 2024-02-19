@@ -68,6 +68,12 @@ const updateDetailsStyles = StyleSheet.create({
 		color: "#fff",
 		fontSize: 18,
 	},
+	forgot: {
+		fontSize: 16,
+		marginHorizontal: 20,
+		marginTop: 10,
+		color: "#997a00",
+	},
 });
 
 export default updateDetailsStyles;
