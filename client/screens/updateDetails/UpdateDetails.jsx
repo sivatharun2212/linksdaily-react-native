@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { View, Text, ScrollView, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, Image, ScrollView, TextInput, TouchableOpacity } from "react-native";
 import { Divider } from "react-native-elements";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -13,6 +13,9 @@ const UpdateDetails = ({ navigation }) => {
 	const [isUpdatePasswordOpened, setIsUpdatePasswordOpened] = useState(false);
 	const [isUpdateRoleOpened, setIsUpdateRoleOpened] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+	const [nameUpdateDone, setNameUpdateDone] = useState(false);
+	const [passUpdateDone, setPassUpdateDone] = useState(false);
+	const [forgotPassShow, setForgotPassShow] = useState(false);
 
 	const [newName, setNewName] = useState("");
 	const [oldPassword, setOldPassword] = useState("");
@@ -22,6 +25,19 @@ const UpdateDetails = ({ navigation }) => {
 
 	//auth context
 	const [authUserData, setAuthUserData] = useContext(AuthContext);
+
+	//sign out
+	const signOut = async () => {
+		//remove user auth data in auth context
+		setAuthUserData((prevState) => ({
+			...prevState,
+			registeredUserEmail: "",
+			token: "",
+			userData: null,
+		}));
+		//remove user auth data in async storage
+		await AsyncStorage.clear();
+	};
 
 	//onpress event : update name
 	const handleUpdateName = async () => {
@@ -41,7 +57,13 @@ const UpdateDetails = ({ navigation }) => {
 				);
 				if (data.status === "success") {
 					//update userData in context
-					setAuthUserData((prevState) => ({ ...prevState, userData: data.userData }));
+					// setAuthUserData((prevState) => ({
+					// 	...prevState,
+					// 	userData: {
+					// 		...prevState.userData,
+					// 		name: data.userData.name,
+					// 	},
+					// }));
 					//save userData in async storage
 					let as = await AsyncStorage.getItem("@AUD");
 					as = JSON.parse(as);
@@ -49,7 +71,12 @@ const UpdateDetails = ({ navigation }) => {
 					await AsyncStorage.setItem("@AUD", JSON.stringify(as));
 				}
 				setIsLoading(false);
-				navigation.navigate("me");
+				setNameUpdateDone(true);
+				setTimeout(() => {
+					setIsUpdateNameOpened(!isUpdateNameOpened);
+					setNameUpdateDone(false);
+				}, 1000);
+				setNameUpdateDone(true);
 			} catch (error) {
 				alert(error.message);
 				setIsLoading(false);
@@ -59,9 +86,45 @@ const UpdateDetails = ({ navigation }) => {
 
 	//onpress event : update password
 	const handleUpdatePassword = async () => {
-		if (oldPassword !== "" || newPassword !== "" || (confirmNewPassword !== "" && newPassword === confirmNewPassword)) {
+		if (
+			oldPassword !== "" ||
+			newPassword !== "" ||
+			(confirmNewPassword !== "" && newPassword === confirmNewPassword)
+		) {
 			try {
-			} catch (error) {}
+				setIsLoading(true);
+				const token = authUserData?.token !== "" && authUserData.token;
+				const { data } = await axios.put(
+					"https://linksdaily-server.onrender.com/api/user/update-password",
+					{
+						oldPassword,
+						newPassword,
+					},
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+							"Content-Type": "application/json",
+						},
+					}
+				);
+				if (data.status === "success") {
+					setIsLoading(false);
+					setForgotPassShow(false);
+					setPassUpdateDone(true);
+					return;
+				}
+				if (data.status === "failed") {
+					alert("incorrect old password");
+					setForgotPassShow(true);
+					setOldPassword("");
+					setNewPassword("");
+					setConfirmNewPassword("");
+				}
+			} catch (error) {
+				alert(error.message);
+				setIsLoading(false);
+				setForgotPassShow(false);
+			}
 		} else {
 			if (newPassword !== confirmNewPassword) {
 				alert("passwords not matched");
@@ -77,7 +140,8 @@ const UpdateDetails = ({ navigation }) => {
 		<View style={updateDetailsStyles.cont}>
 			<ScrollView style={updateDetailsStyles.updateSection}>
 				<View style={updateDetailsStyles.updateCont}>
-					<TouchableOpacity onPress={() => setIsUpdateNameOpened(!isUpdateNameOpened)}>
+					<TouchableOpacity
+						onPress={() => setIsUpdateNameOpened(!isUpdateNameOpened)}>
 						<View style={updateDetailsStyles.updateTitleCont}>
 							<Text style={updateDetailsStyles.title}>Update Name</Text>
 						</View>
@@ -90,18 +154,51 @@ const UpdateDetails = ({ navigation }) => {
 								style={updateDetailsStyles.Input}
 								placeholder="New Name"
 							/>
-							<TouchableOpacity
-								onPress={handleUpdateName}
-								style={updateDetailsStyles.Button}>
-								{isLoading ? <Text style={updateDetailsStyles.btnText}>Updating...</Text> : <Text style={updateDetailsStyles.btnText}>Update</Text>}
-							</TouchableOpacity>
+							{nameUpdateDone ? (
+								<View style={updateDetailsStyles.updateDoneCont}>
+									<Image
+										style={
+											updateDetailsStyles.updateDoneImage
+										}
+										source={require("../../assets/done.png")}
+									/>
+									<Text style={updateDetailsStyles.doneText}>
+										Done
+									</Text>
+								</View>
+							) : (
+								<TouchableOpacity
+									onPress={handleUpdateName}
+									style={updateDetailsStyles.Button}>
+									{isLoading ? (
+										<Text
+											style={
+												updateDetailsStyles.btnText
+											}>
+											Updating...
+										</Text>
+									) : (
+										<Text
+											style={
+												updateDetailsStyles.btnText
+											}>
+											Update
+										</Text>
+									)}
+								</TouchableOpacity>
+							)}
 						</View>
 					)}
 					<Divider width={1} />
 
-					<TouchableOpacity onPress={() => setIsUpdatePasswordOpened(!isUpdatePasswordOpened)}>
+					<TouchableOpacity
+						onPress={() =>
+							setIsUpdatePasswordOpened(!isUpdatePasswordOpened)
+						}>
 						<View style={updateDetailsStyles.updateTitleCont}>
-							<Text style={updateDetailsStyles.title}>Update Password</Text>
+							<Text style={updateDetailsStyles.title}>
+								Update Password
+							</Text>
 						</View>
 					</TouchableOpacity>
 					<Divider width={1} />
@@ -123,17 +220,57 @@ const UpdateDetails = ({ navigation }) => {
 								style={updateDetailsStyles.Input}
 								placeholder="Confirm New Password"
 							/>
-							<TouchableOpacity
-								onPress={handleUpdatePassword}
-								style={updateDetailsStyles.Button}>
-								<Text style={updateDetailsStyles.btnText}>Update</Text>
-							</TouchableOpacity>
-							<Text style={updateDetailsStyles.forgot}>seems like you forgot your password</Text>
+							{passUpdateDone ? (
+								<View style={updateDetailsStyles.updateDoneCont}>
+									<Image
+										style={
+											updateDetailsStyles.updateDoneImage
+										}
+										source={require("../../assets/done.png")}
+									/>
+									<Text style={updateDetailsStyles.doneText}>
+										Done
+									</Text>
+								</View>
+							) : (
+								<TouchableOpacity
+									onPress={handleUpdatePassword}
+									style={updateDetailsStyles.Button}>
+									{isLoading ? (
+										<Text
+											style={
+												updateDetailsStyles.btnText
+											}>
+											Updating...
+										</Text>
+									) : (
+										<Text
+											style={
+												updateDetailsStyles.btnText
+											}>
+											Update
+										</Text>
+									)}
+								</TouchableOpacity>
+							)}
+
+							{forgotPassShow && (
+								<Text style={updateDetailsStyles.forgot}>
+									seems like you forgot your password, go on and{" "}
+									<Text
+										style={updateDetailsStyles.reset}
+										onPress={() => signOut()}>
+										reset
+									</Text>{" "}
+									password
+								</Text>
+							)}
 						</View>
 					)}
 					<Divider width={1} />
 
-					<TouchableOpacity onPress={() => setIsUpdateRoleOpened(!isUpdateRoleOpened)}>
+					<TouchableOpacity
+						onPress={() => setIsUpdateRoleOpened(!isUpdateRoleOpened)}>
 						<View style={updateDetailsStyles.lastUpdateTitleCont}>
 							<Text style={updateDetailsStyles.title}>Update Role</Text>
 						</View>
@@ -148,7 +285,9 @@ const UpdateDetails = ({ navigation }) => {
 							<TouchableOpacity
 								onPress={handleUpdateRole}
 								style={updateDetailsStyles.Button}>
-								<Text style={updateDetailsStyles.btnText}>Update</Text>
+								<Text style={updateDetailsStyles.btnText}>
+									Update
+								</Text>
 							</TouchableOpacity>
 						</View>
 					)}

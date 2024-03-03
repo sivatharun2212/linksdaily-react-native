@@ -74,6 +74,29 @@ const updateDetailsStyles = StyleSheet.create({
 		marginTop: 10,
 		color: "#997a00",
 	},
+	reset: {
+		fontSize: 16,
+		marginHorizontal: 20,
+		fontWeight: "800",
+		marginTop: 10,
+		color: "#009999",
+	},
+	updateDoneCont: {
+		width: 180,
+		height: 40,
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+		gap: 12,
+	},
+	updateDoneImage: {
+		width: 30,
+		height: 30,
+	},
+	doneText: {
+		fontSize: 20,
+		fontWeight: "900",
+	},
 });
 
 export default updateDetailsStyles;

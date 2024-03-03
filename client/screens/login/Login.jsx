@@ -27,10 +27,13 @@ const Login = ({ navigation }) => {
 		}
 		try {
 			//send post request to login user
-			const { data } = await axios.post("https://linksdaily-server.onrender.com/api/auth/login", {
-				email,
-				password,
-			});
+			const { data } = await axios.post(
+				"https://linksdaily-server.onrender.com/api/auth/login",
+				{
+					email,
+					password,
+				}
+			);
 
 			// save auth user data in async storage
 			await AsyncStorage.setItem(
@@ -43,8 +46,11 @@ const Login = ({ navigation }) => {
 			// console.log("as", AsyncStorage);
 
 			//update auth user data in auth context
-			setAuthUserData((prevState) => ({ ...prevState, token: data.token, userData: data.userData }));
-
+			setAuthUserData((prevState) => ({
+				...prevState,
+				token: data.token,
+				userData: data.userData,
+			}));
 			navigation.navigate("home");
 			setIsLoading(false);
 		} catch (err) {
