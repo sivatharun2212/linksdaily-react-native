@@ -100,3 +100,63 @@ export default Welcome;
 // 	  "updatedAt": "2024-02-12T16:06:34.107Z"
 // 	}
 //   }
+
+// {
+// 	"message": "login successful",
+// 	"status": "success",
+// 	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWU0
+// 	OGM0MTc5ODJkYjlmMTQ2ZDBjMjUiLCJlbWFpbCI6InNpdmF0aGFydW4yMjEyQGdt
+// 	YWlsLmNvbSIsImlhdCI6MTcwOTQ3NzAyNSwiZXhwIjoxNzEwMDgxODI1fQ.4HHIEU5g8
+// 	MWX46jLZHDWiAMlD5ybwzMJjtR7Zy14-HE",
+// 	"userData": {
+// 		"__v": 0,
+// 		"_id": "65e48c417982db9f146d0c25",
+// 		"createdAt": "2024-03-03T14:42:09.562Z",
+// 		"email": "sivatharun2212@gmail.com",
+// 		"image": {},
+// 		"name": "Rowdy Siva",
+// 		"updatedAt": "2024-03-03T14:42:09.562Z"
+// 	}
+// }
+
+// [
+// 	{
+// 	  "email": "sivatharun2212@gmail.com",
+// 	  "image": {
+// 		"public_id": "HzeKzOdklHWjUPsrd2-5n",
+// 		"url": "https://res.cloudinary.com/dpnzucco8/image/upload/v1709481299/HzeKzOdklHWjUPsrd2-5n.jpg"
+// 	  },
+// 	  "name": "Sivatharun",
+// 	  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWU0OTg3Y2FmNGQwZGJlNDNhOGMzMTYiLCJlbWFpbCI6InNpdmF0aGFydW4yMjEyQGdtYWlsLmNvbSIsImlhdCI6MTcwOTQ4MTYxOSwiZXhwIjoxNzEwMDg2NDE5fQ.2rEgWZE4AOXus4cn3dLW60IZMDY1zZ3HQRSF4egTAtY",
+// 	  "userId": "65e4987caf4d0dbe43a8c316"
+// 	}
+//   ]
+
+// {
+// 	"payload": {
+// 		"message": "Name Updated",
+// 		"ststus": "success",
+// 		"userData": {
+// 			"__v": 0,
+// 			"_id": "65e4987caf4d0dbe43a8c316",
+// 			"createdAt": "2024-03-03T15:34:20.770Z",
+// 			 "email": "sivatharun2212@gmail.com",
+// 			 "image": [Object],
+// 			 "name": "Amarendr",
+// 			 "password": "$2b$10$LknXPUn5w6tG3qmrIn96TO7iHRtkVMnmJ5s.xXLDdRqLnTzm6UvDi",
+// 			 "resetCode": "",
+// 			 "updatedAt": "2024-03-03T16:15:47.155Z"
+// 			}
+// 		},
+// 		 "type": "authUser/updateUserData"
+// 		}
+
+// {
+// 	"email": "sivatharun2212@gmail.com",
+// 	"image": {
+// 		"public_id": "HzeKzOdklHWjUPsrd2-5n",
+// 		"url": "https://res.cloudinary.com/dpnzucco8/image/upload/v1709481299/HzeKzOdklHWjUPsrd2-5n.jpg"},
+// 		"name": "Amarendr",
+// 		"token": undefined,
+// 		"userId": "65e4987caf4d0dbe43a8c316"
+// 	}

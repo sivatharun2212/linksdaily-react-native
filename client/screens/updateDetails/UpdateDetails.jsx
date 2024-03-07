@@ -1,13 +1,14 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { View, Text, Image, ScrollView, TextInput, TouchableOpacity } from "react-native";
 import { Divider } from "react-native-elements";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { useDispatch, useSelector } from "react-redux";
 import updateDetailsStyles from "./updateDetailsStyles";
-import { AuthContext } from "../../context/authContext";
+import { signout, updateUserData } from "../../features/authUserSlice";
 
 const UpdateDetails = ({ navigation }) => {
+	const dispatch = useDispatch();
 	//state variables
 	const [isUpdateNameOpened, setIsUpdateNameOpened] = useState(false);
 	const [isUpdatePasswordOpened, setIsUpdatePasswordOpened] = useState(false);
@@ -24,17 +25,11 @@ const UpdateDetails = ({ navigation }) => {
 	const [newRole, setNewRole] = useState("");
 
 	//auth context
-	const [authUserData, setAuthUserData] = useContext(AuthContext);
-
+	const authUserData = useSelector((state) => state.authUser);
 	//sign out
 	const signOut = async () => {
 		//remove user auth data in auth context
-		setAuthUserData((prevState) => ({
-			...prevState,
-			registeredUserEmail: "",
-			token: "",
-			userData: null,
-		}));
+		dispatch(signout());
 		//remove user auth data in async storage
 		await AsyncStorage.clear();
 	};
@@ -45,6 +40,7 @@ const UpdateDetails = ({ navigation }) => {
 			try {
 				setIsLoading(true);
 				const token = authUserData?.token !== "" && authUserData.token;
+				console.log("token", token);
 				const { data } = await axios.put(
 					"https://linksdaily-server.onrender.com/api/user/update-name",
 					{ name: newName },
@@ -55,20 +51,16 @@ const UpdateDetails = ({ navigation }) => {
 						},
 					}
 				);
-				if (data.status === "success") {
-					//update userData in context
-					// setAuthUserData((prevState) => ({
-					// 	...prevState,
-					// 	userData: {
-					// 		...prevState.userData,
-					// 		name: data.userData.name,
-					// 	},
-					// }));
+
+				if (data.ststus === "success") {
+					dispatch(updateUserData(data));
 					//save userData in async storage
 					let as = await AsyncStorage.getItem("@AUD");
 					as = JSON.parse(as);
 					as.userData = data.userData;
 					await AsyncStorage.setItem("@AUD", JSON.stringify(as));
+				} else {
+					console.log("failed to change name");
 				}
 				setIsLoading(false);
 				setNameUpdateDone(true);
@@ -153,6 +145,7 @@ const UpdateDetails = ({ navigation }) => {
 								onChangeText={(text) => setNewName(text)}
 								style={updateDetailsStyles.Input}
 								placeholder="New Name"
+								value={newName}
 							/>
 							{nameUpdateDone ? (
 								<View style={updateDetailsStyles.updateDoneCont}>

@@ -29,7 +29,11 @@ export const uploadImage = async (req, res) => {
 		console.log("saved");
 		if (user.image.public_id !== "" && user.image.secure_url !== "") {
 			const { password, ...rest } = user._doc;
-			res.status(200).json({ status: "success", message: "image uploaded", userData: rest });
+			res.status(200).json({
+				status: "success",
+				message: "image uploaded",
+				userData: rest,
+			});
 		}
 		console.log("sent");
 		console.log("uploadResult", uploadResult);
@@ -47,7 +51,11 @@ export const updateName = async (req, res) => {
 	try {
 		const updatedUser = await userModel.findByIdAndUpdate(_id, { name }, { new: true });
 		if (updatedUser) {
-			res.status(200).json({ ststus: "success", message: "Name Updated", userData: updatedUser });
+			res.status(200).json({
+				ststus: "success",
+				message: "Name Updated",
+				userData: updatedUser,
+			});
 		} else {
 			res.status(500).json({ status: "failed", message: "failed to update the name" });
 		}
@@ -64,15 +72,25 @@ export const updatePassword = async (req, res) => {
 	try {
 		//ckeck old password
 		const user = await userModel.findOne({ email });
-		const hashedOldPassword = await hash(oldPassword, 10);
-
-		if (user && hashedOldPassword === user.password) {
+		const passwordMatched = await compare(oldPassword, user.password);
+		if (user && passwordMatched) {
 			const hashedNewPassword = await hash(newPassword, 10);
-			const updatedUser = await userModel.findByIdAndUpdate(_id, { password: hashedNewPassword }, { new: true });
+			const updatedUser = await userModel.findByIdAndUpdate(
+				_id,
+				{ password: hashedNewPassword },
+				{ new: true }
+			);
 			if (updatedUser) {
-				res.status(200).json({ status: "success", message: "password updated", userData: updatedUser });
+				res.status(200).json({
+					status: "success",
+					message: "password updated",
+					userData: updatedUser,
+				});
 			} else {
-				res.status(500).json({ status: "failed", message: "failed to update the password" });
+				res.status(500).json({
+					status: "fail",
+					message: "failed to update the password",
+				});
 			}
 		} else {
 			res.status(500).json({ status: "failed", message: "incorrect old password" });

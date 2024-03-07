@@ -1,19 +1,19 @@
-import React, { useContext } from "react";
+import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { Divider } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-
+import { useDispatch } from "react-redux";
+import { signout } from "../../features/authUserSlice";
 import accOptStyles from "./accOptStyles";
-import { AuthContext } from "../../context/authContext";
 const AccountOptions = () => {
+	const dispatch = useDispatch();
 	const navigation = useNavigation();
-	const [authUserData, setAuthUserData] = useContext(AuthContext);
 
 	const signOut = async () => {
 		//remove user auth data in auth context
-		setAuthUserData((prevState) => ({ ...prevState, registeredUserEmail: "", token: "", userData: null }));
+		dispatch(signout());
 		//remove user auth data in async storage
 		await AsyncStorage.clear();
 	};

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Text, View, Image, TouchableOpacity } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -6,7 +6,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoginStyles from "./loginStyles";
 import UserInput from "../../components/auth/UserInput";
 import Button from "../../components/auth/Button";
-import { AuthContext } from "../../context/authContext";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUserData } from "../../features/authUserSlice";
 
 const Login = ({ navigation }) => {
 	//state variables
@@ -15,7 +16,25 @@ const Login = ({ navigation }) => {
 	const [isLoading, setIsLoading] = useState(false);
 
 	//auth context
-	const [authUserData, setAuthUserData] = useContext(AuthContext);
+	const dispatch = useDispatch();
+	const authUserData = useSelector((state) => state.authUser);
+	console.log("authUserData before", authUserData);
+
+	//function to save in async storage
+	const saveUserData = async (data) => {
+		try {
+			await AsyncStorage.setItem(
+				"@AUD",
+				JSON.stringify({
+					token: data.token,
+					userData: data.userData,
+				})
+			);
+			console.log("Data saved successfully to AsyncStorage");
+		} catch (error) {
+			console.log("Error saving data to AsyncStorage:", error.message);
+		}
+	};
 
 	//onpress event : login button click
 	const handleSubmit = async () => {
@@ -34,25 +53,17 @@ const Login = ({ navigation }) => {
 					password,
 				}
 			);
+			if (data && data.status === "success") {
+				// save auth user data in async storage
+				saveUserData(data);
+				//update auth user data in auth context
+				dispatch(updateUserData(data));
 
-			// save auth user data in async storage
-			await AsyncStorage.setItem(
-				"@AUD",
-				JSON.stringify({
-					token: data.token,
-					userData: data.userData,
-				})
-			);
-			// console.log("as", AsyncStorage);
-
-			//update auth user data in auth context
-			setAuthUserData((prevState) => ({
-				...prevState,
-				token: data.token,
-				userData: data.userData,
-			}));
-			navigation.navigate("home");
-			setIsLoading(false);
+				navigation.navigate("home");
+				setIsLoading(false);
+			} else {
+				console.log("req failed");
+			}
 		} catch (err) {
 			console.log(err);
 			setIsLoading(false);

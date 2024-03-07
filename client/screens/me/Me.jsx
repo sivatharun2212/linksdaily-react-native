@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import axios from "axios";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
@@ -7,10 +7,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import NavToolBar from "../../components/nav/Nav";
 import meStyles from "./meStyles";
-import { AuthContext } from "../../context/authContext";
 import AccountOptions from "../../components/accountOptions/AccountOptions";
-
+import { useSelector, useDispatch } from "react-redux";
+import { updateUserData } from "../../features/authUserSlice";
 const Me = ({ navigation }) => {
+	const dispatch = useDispatch();
 	//state variables
 	const [uploadedImage, setUploadedImage] = useState("");
 	// const [name, setName] = useState("");
@@ -18,9 +19,10 @@ const Me = ({ navigation }) => {
 	// const [imgUploadData, setImgUploadData] = useState("");
 
 	//auth context
-	const [authUserData, setAuthUserData] = useContext(AuthContext);
+	const authUserData = useSelector((state) => state.authUser);
+
 	useEffect(() => {
-		if (authUserData?.userData?.image?.url) {
+		if (authUserData?.image?.url) {
 			setUploadedImage("");
 		}
 	}, [authUserData]);
@@ -70,8 +72,7 @@ const Me = ({ navigation }) => {
 		);
 		if (data) {
 			//update image in auth context
-			setAuthUserData((prevState) => ({ ...prevState, userData: data.userData }));
-
+			dispatch(updateUserData(data));
 			//update authUserData in async storage
 			let as = await AsyncStorage.getItem("@AUD");
 			as = JSON.parse(as);
@@ -89,17 +90,32 @@ const Me = ({ navigation }) => {
 				<View style={meStyles.imageCont}>
 					{uploadedImage ? (
 						<Image
-							style={{ width: 160, height: 160, alignSelf: "center", resizeMode: "cover" }}
+							style={{
+								width: 160,
+								height: 160,
+								alignSelf: "center",
+								resizeMode: "cover",
+							}}
 							source={{ uri: uploadedImage }}
 						/>
-					) : authUserData?.userData?.image && authUserData.userData.image.url ? (
+					) : authUserData?.image && authUserData.image.url ? (
 						<Image
-							style={{ width: 160, height: 160, alignSelf: "center", resizeMode: "cover" }}
-							source={{ uri: authUserData.userData.image.url }}
+							style={{
+								width: 160,
+								height: 160,
+								alignSelf: "center",
+								resizeMode: "cover",
+							}}
+							source={{ uri: authUserData.image.url }}
 						/>
 					) : (
 						<Image
-							style={{ width: 160, height: 160, alignSelf: "center", resizeMode: "cover" }}
+							style={{
+								width: 160,
+								height: 160,
+								alignSelf: "center",
+								resizeMode: "cover",
+							}}
 							source={require("../../assets/default-user.jpg")}
 						/>
 					)}
@@ -114,8 +130,8 @@ const Me = ({ navigation }) => {
 					</TouchableOpacity>
 				</View>
 				<View style={meStyles.userInfo}>
-					<Text style={meStyles.userName}>{authUserData.userData.name}</Text>
-					<Text style={meStyles.userEmail}>{authUserData.userData.email}</Text>
+					<Text style={meStyles.userName}>{authUserData.name}</Text>
+					<Text style={meStyles.userEmail}>{authUserData.email}</Text>
 					<AccountOptions />
 				</View>
 			</ScrollView>

@@ -2,12 +2,10 @@ import { Text, View, TouchableOpacity } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { Divider } from "react-native-elements";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-
 import navStyles from "./navStyles";
 
 const ToolTip = ({ label, name, size, solid, onPress, screenName }) => {
 	const activeScreen = label.toLowerCase() === screenName;
-
 	return (
 		<TouchableOpacity
 			onPress={onPress}

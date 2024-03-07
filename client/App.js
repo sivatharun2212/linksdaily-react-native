@@ -1,14 +1,14 @@
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
-import { AuthProvider } from "./context/authContext";
 import RootNavigator from "./RootNavigator";
-
+import { store } from "./app/store";
+import { Provider } from "react-redux";
 export default function App() {
 	return (
 		<NavigationContainer>
-			<AuthProvider>
+			<Provider store={store}>
 				<RootNavigator />
-			</AuthProvider>
+			</Provider>
 		</NavigationContainer>
 	);
 }

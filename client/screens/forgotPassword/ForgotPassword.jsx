@@ -1,12 +1,14 @@
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 
 import { forgotPasswordStyles } from "./forgotPasswordStyles";
-import { AuthContext } from "../../context/authContext";
+import { updateRegEmail } from "../../features/regEmailSlice";
 
 const ForgotPassword = ({ navigation }) => {
+	const dispatch = useDispatch();
 	//state variables
 	const [registeredEmail, setRegisteredEmail] = useState("");
 	const [isUserVerified, setIsUserVerified] = useState(false);
@@ -14,21 +16,26 @@ const ForgotPassword = ({ navigation }) => {
 	const [otp, setOtp] = useState(false);
 
 	//auth context
-	const [authUserData, setAuthUserData] = useContext(AuthContext);
 	//onpress event : send reset code button click
 	const handleSendCode = async () => {
 		if (registeredEmail !== "") {
 			setIsOtpSent(true);
 			//send post request to verify user
-			const { data } = await axios.post("https://linksdaily-server.onrender.com/api/auth/verify-user", { email: registeredEmail });
+			const { data } = await axios.post(
+				"https://linksdaily-server.onrender.com/api/auth/verify-user",
+				{ email: registeredEmail }
+			);
 			if (data.status === "success") {
 				//update registered user email in auth context
-				setAuthUserData((prevState) => ({ ...prevState, registeredUserEmail: registeredEmail }));
+				dispatch(updateRegEmail(registeredEmail));
 				//add registered user email in async storage
 				await AsyncStorage.setItem("@RUE", registeredEmail);
 
 				//send post request to send email to user for reseting the password
-				const sendOtp = await axios.post("https://linksdaily-server.onrender.com/api/auth/forgot-password", { email: registeredEmail });
+				const sendOtp = await axios.post(
+					"https://linksdaily-server.onrender.com/api/auth/forgot-password",
+					{ email: registeredEmail }
+				);
 				if ((sendOtp.data.status = "success")) {
 					setIsUserVerified(true);
 				}
@@ -44,7 +51,10 @@ const ForgotPassword = ({ navigation }) => {
 		//check the otp length
 		if (otp && otp.length === 6) {
 			//send post request to validate otp
-			const resetPassword = await axios.post("https://linksdaily-server.onrender.com/api/auth/validate-otp", { otp, email: registeredEmail });
+			const resetPassword = await axios.post(
+				"https://linksdaily-server.onrender.com/api/auth/validate-otp",
+				{ otp, email: registeredEmail }
+			);
 			if (resetPassword.data.status === "success") {
 				navigation.navigate("reset-password");
 			}
@@ -62,10 +72,15 @@ const ForgotPassword = ({ navigation }) => {
 				/>
 				<TouchableOpacity
 					onPress={handleSendCode}
-					style={[forgotPasswordStyles.btnWrapper, { backgroundColor: isUserVerified ? "#a5d1d1" : "#009999" }]}
+					style={[
+						forgotPasswordStyles.btnWrapper,
+						{ backgroundColor: isUserVerified ? "#a5d1d1" : "#009999" },
+					]}
 					disabled={isUserVerified}>
 					{!isOtpSent ? (
-						<Text style={forgotPasswordStyles.sendBtn}>Send reset Code</Text>
+						<Text style={forgotPasswordStyles.sendBtn}>
+							Send reset Code
+						</Text>
 					) : !isUserVerified ? (
 						<Text style={forgotPasswordStyles.sendBtn}>Sending!</Text>
 					) : (
@@ -83,7 +98,9 @@ const ForgotPassword = ({ navigation }) => {
 						<TouchableOpacity
 							onPress={handelResetPass}
 							style={forgotPasswordStyles.btnWrapper}>
-							<Text style={forgotPasswordStyles.sendBtn}>Reset password</Text>
+							<Text style={forgotPasswordStyles.sendBtn}>
+								Reset password
+							</Text>
 						</TouchableOpacity>
 					</View>
 				)}

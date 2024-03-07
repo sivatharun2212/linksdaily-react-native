@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Text, View, TouchableOpacity, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -6,9 +6,11 @@ import axios from "axios";
 import SignupStyles from "./SignupStyles";
 import UserInput from "../../components/auth/UserInput";
 import Button from "../../components/auth/Button";
-import { AuthContext } from "../../context/authContext";
+import { useDispatch } from "react-redux";
+import { updateUserData } from "../../features/authUserSlice";
 
 const Signup = ({ navigation }) => {
+	const dispatch = useDispatch();
 	//state variables
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
@@ -19,11 +21,9 @@ const Signup = ({ navigation }) => {
 	const [otp, setOtp] = useState("");
 	const [generatedOtp, setGeneratedOtp] = useState("");
 	//auth context
-	const [authUserData, setAuthUserData] = useContext(AuthContext);
 
 	//onpress event : send otp click
 	const sendOtp = async () => {
-		console.log("started");
 		setIsLoading(true);
 		if (!email) {
 			alert("all fields are required!");
@@ -31,11 +31,11 @@ const Signup = ({ navigation }) => {
 			return;
 		}
 		try {
-			console.log("tried");
-			const { data } = await axios.post("https://linksdaily-server.onrender.com/api/auth/send-otp", { email });
-			console.log("req sent");
+			const { data } = await axios.post(
+				"https://linksdaily-server.onrender.com/api/auth/send-otp",
+				{ email }
+			);
 			if (data.status === "success") {
-				console.log("got res");
 				setAskOtp(true);
 				setGeneratedOtp(data.otp);
 			}
@@ -71,11 +71,14 @@ const Signup = ({ navigation }) => {
 		}
 		try {
 			//send post request to create new user in database
-			const { data } = await axios.post("https://linksdaily-server.onrender.com/api/auth/signup", {
-				name,
-				email,
-				password,
-			});
+			const { data } = await axios.post(
+				"https://linksdaily-server.onrender.com/api/auth/signup",
+				{
+					name,
+					email,
+					password,
+				}
+			);
 			//console.log(data);
 
 			//save auth user data to async storage
@@ -88,7 +91,7 @@ const Signup = ({ navigation }) => {
 			);
 
 			//update auth user data in auth context
-			setAuthUserData((prevState) => ({ ...prevState, token: data.token, userData: data.userData }));
+			dispatch(updateUserData(data));
 			//navigate to home screen
 			navigation.navigate("home");
 			setIsLoading(false);
@@ -138,7 +141,11 @@ const Signup = ({ navigation }) => {
 					<TouchableOpacity
 						onPress={sendOtp}
 						style={SignupStyles.touchOp}>
-						{isLoading ? <Text style={SignupStyles.button}>Sending</Text> : <Text style={SignupStyles.button}>Send Opt</Text>}
+						{isLoading ? (
+							<Text style={SignupStyles.button}>Sending</Text>
+						) : (
+							<Text style={SignupStyles.button}>Send Opt</Text>
+						)}
 					</TouchableOpacity>
 				)}
 
@@ -153,7 +160,13 @@ const Signup = ({ navigation }) => {
 						<TouchableOpacity
 							onPress={handleVerifyEmail}
 							style={SignupStyles.touchOp}>
-							{isLoading ? <Text style={SignupStyles.button}>Verifing...</Text> : <Text style={SignupStyles.button}>Verify email</Text>}
+							{isLoading ? (
+								<Text style={SignupStyles.button}>Verifing...</Text>
+							) : (
+								<Text style={SignupStyles.button}>
+									Verify email
+								</Text>
+							)}
 						</TouchableOpacity>
 					</>
 				)}
