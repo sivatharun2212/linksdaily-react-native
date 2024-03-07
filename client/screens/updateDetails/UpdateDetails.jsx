@@ -41,6 +41,7 @@ const UpdateDetails = ({ navigation }) => {
 				setIsLoading(true);
 				const token = authUserData?.token !== "" && authUserData.token;
 				console.log("token", token);
+
 				const { data } = await axios.put(
 					"https://linksdaily-server.onrender.com/api/user/update-name",
 					{ name: newName },
@@ -52,8 +53,9 @@ const UpdateDetails = ({ navigation }) => {
 					}
 				);
 
-				if (data.ststus === "success") {
+				if (data.status === "success") {
 					dispatch(updateUserData(data));
+
 					//save userData in async storage
 					let as = await AsyncStorage.getItem("@AUD");
 					as = JSON.parse(as);
@@ -61,6 +63,7 @@ const UpdateDetails = ({ navigation }) => {
 					await AsyncStorage.setItem("@AUD", JSON.stringify(as));
 				} else {
 					console.log("failed to change name");
+					alert("failed to change name");
 				}
 				setIsLoading(false);
 				setNameUpdateDone(true);
@@ -70,7 +73,7 @@ const UpdateDetails = ({ navigation }) => {
 				}, 1000);
 				setNameUpdateDone(true);
 			} catch (error) {
-				alert(error.message);
+				alert("alert in update name", error.message);
 				setIsLoading(false);
 			}
 		}
@@ -78,14 +81,16 @@ const UpdateDetails = ({ navigation }) => {
 
 	//onpress event : update password
 	const handleUpdatePassword = async () => {
+		console.log("check 1");
 		if (
-			oldPassword !== "" ||
-			newPassword !== "" ||
-			(confirmNewPassword !== "" && newPassword === confirmNewPassword)
+			(oldPassword !== "" || newPassword !== "" || confirmNewPassword !== "") &&
+			newPassword === confirmNewPassword
 		) {
 			try {
+				console.log("check 2");
 				setIsLoading(true);
 				const token = authUserData?.token !== "" && authUserData.token;
+				console.log("check 3");
 				const { data } = await axios.put(
 					"https://linksdaily-server.onrender.com/api/user/update-password",
 					{
@@ -99,12 +104,17 @@ const UpdateDetails = ({ navigation }) => {
 						},
 					}
 				);
+				console.log("check 4");
 				if (data.status === "success") {
 					setIsLoading(false);
 					setForgotPassShow(false);
 					setPassUpdateDone(true);
-					return;
+					setTimeout(() => {
+						setIsUpdatePasswordOpened(!isUpdatePasswordOpened);
+						setPassUpdateDone(false);
+					}, 1000);
 				}
+				console.log("check 5");
 				if (data.status === "failed") {
 					alert("incorrect old password");
 					setForgotPassShow(true);
@@ -116,6 +126,9 @@ const UpdateDetails = ({ navigation }) => {
 				alert(error.message);
 				setIsLoading(false);
 				setForgotPassShow(false);
+				setOldPassword("");
+				setNewPassword("");
+				setConfirmNewPassword("");
 			}
 		} else {
 			if (newPassword !== confirmNewPassword) {
@@ -202,16 +215,19 @@ const UpdateDetails = ({ navigation }) => {
 								onChangeText={(text) => setOldPassword(text)}
 								style={updateDetailsStyles.Input}
 								placeholder="Old Password"
+								value={oldPassword}
 							/>
 							<TextInput
 								onChangeText={(text) => setNewPassword(text)}
 								style={updateDetailsStyles.Input}
 								placeholder="New Password"
+								value={newPassword}
 							/>
 							<TextInput
 								onChangeText={(text) => setConfirmNewPassword(text)}
 								style={updateDetailsStyles.Input}
 								placeholder="Confirm New Password"
+								value={confirmNewPassword}
 							/>
 							{passUpdateDone ? (
 								<View style={updateDetailsStyles.updateDoneCont}>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Text, View, Image, TouchableOpacity } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -8,6 +8,8 @@ import UserInput from "../../components/auth/UserInput";
 import Button from "../../components/auth/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUserData } from "../../features/authUserSlice";
+import { loadDataFromAS } from "../../features/authUserSlice";
+import { loadEmailFromAS } from "../../features/regEmailSlice";
 
 const Login = ({ navigation }) => {
 	//state variables
@@ -20,6 +22,10 @@ const Login = ({ navigation }) => {
 	const authUserData = useSelector((state) => state.authUser);
 	console.log("authUserData before", authUserData);
 
+	useEffect(() => {
+		dispatch(loadDataFromAS());
+		dispatch(loadEmailFromAS());
+	}, []);
 	//function to save in async storage
 	const saveUserData = async (data) => {
 		try {

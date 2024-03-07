@@ -52,7 +52,7 @@ export const updateName = async (req, res) => {
 		const updatedUser = await userModel.findByIdAndUpdate(_id, { name }, { new: true });
 		if (updatedUser) {
 			res.status(200).json({
-				ststus: "success",
+				status: "success",
 				message: "Name Updated",
 				userData: updatedUser,
 			});
@@ -93,7 +93,7 @@ export const updatePassword = async (req, res) => {
 				});
 			}
 		} else {
-			res.status(500).json({ status: "failed", message: "incorrect old password" });
+			res.status(401).json({ status: "failed", message: "incorrect old password" });
 		}
 	} catch (error) {
 		res.status(500).json({ status: "error", message: error.message });

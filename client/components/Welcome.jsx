@@ -160,3 +160,30 @@ export default Welcome;
 // 		"token": undefined,
 // 		"userId": "65e4987caf4d0dbe43a8c316"
 // 	}
+// {
+// 	"email": "sivatharun2212@gmail.com",
+// 	"image": {
+// 	  "public_id": "",
+// 	  "url": ""
+// 	},
+// 	"name": "Vikram",
+// 	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWU5ZTcxOTk5NmNjOTg2MTMyYmExZmEiLCJlbWFpbCI6InNpdmF0aGFydW4yMjEyQGdtYWlsLmNvbSIsImlhdCI6MTcwOTgzMDU2NiwiZXhwIjoxNzEwNDM1MzY2fQ.NbfofbjMchOt078LVKLTBRBGe-pkDV9tQ9rzK3keJP8",
+// 	"userId": "65e9e719996cc986132ba1fa"
+//   }
+
+// {
+// 	"payload": {
+// 	  "message": "Name Updated",
+// 	  "ststus": "success",
+// 	  "userData": {
+// 		"__v": 0,
+// 		"_id": "65e9e719996cc986132ba1fa",
+// 		"createdAt": "2024-03-07T16:11:05.985Z",
+// 		"email": "sivatharun2212@gmail.com",
+// 		"name": "Grrrffhhhff",
+// 		"password": "$2b$10$8UK73Uh2X9vN2WEF8DXcQ.0XhybIXw1BczJYvjdsZ4/YhjN5BKEH.",
+// 		"updatedAt": "2024-03-07T16:59:36.144Z"
+// 	  }
+// 	},
+// 	"type": "authUser/updateUserData"
+//   }

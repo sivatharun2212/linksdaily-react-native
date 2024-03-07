@@ -33,8 +33,12 @@ const authUserSlice = createSlice({
 			state.email = action.payload.userData.email;
 			state.token = action.payload.token ? action.payload.token : state.token;
 			state.name = action.payload.userData.name;
-			state.image.public_id = action.payload.userData.image.public_id;
-			state.image.url = action.payload.userData.image.url;
+			state.image.public_id = action.payload.userData?.image?.public_id
+				? action.payload.userData.image.public_id
+				: state.image.public_id;
+			state.image.url = action.payload.userData?.image?.url
+				? action.payload.userData.image.url
+				: state.image.url;
 			console.log("state after update", state);
 			console.log("action after update", action);
 		},
